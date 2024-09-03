@@ -1,0 +1,38 @@
+global:
+    enabled: true
+
+injector:  
+  enabled: "-"
+  replicas: 1
+  port: 8080
+  leaderElector:
+    enabled: true
+  metrics:
+    enabled: false
+  externalVaultAddr: ""
+  image:
+    repository: "hashicorp/vault-k8s"
+    tag: "1.2.1"
+    pullPolicy: IfNotPresent
+  agentImage:
+    repository: "hashicorp/vault"
+    tag: "1.13.1"
+  authPath: "auth/_DC_ONE_NAME_"
+  logLevel: "info"
+  logFormat: "standard"
+  revokeOnShutdown: false  
+
+server:  
+  enabled: "-"
+  image:
+    repository: "hashicorp/vault"
+    tag: "1.13.1"    
+    pullPolicy: IfNotPresent
+  updateStrategyType: "OnDelete"  
+  logLevel: "trace"
+  logFormat: "standard"
+  service:
+    type: NodePort
+    nodePort: 31888
+  
+    

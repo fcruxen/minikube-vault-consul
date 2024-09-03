@@ -1,0 +1,6 @@
+server:
+  enabled: false
+injector:
+  enabled: true
+  externalVaultAddr: http://_ONE_CLUSTER_IP_:31888
+  authPath: auth/_DC_TWO_NAME_

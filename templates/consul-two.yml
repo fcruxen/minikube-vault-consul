@@ -1,0 +1,84 @@
+global:
+  enabled: true
+  name: consul
+  datacenter: _DC_TWO_NAME_
+  domain: _CONSUL_DOMAIN_
+
+  secretsBackend:
+    vault:
+      enabled: true
+      consulServerRole: consul-server
+      consulClientRole: consul-client
+      consulCARole: consul-ca
+      manageSystemACLsRole: consul-server-acl-init
+      connectCA:
+        address: http://_ONE_CLUSTER_IP_:31888
+        rootPKIPath: connect_root/
+        intermediatePKIPath: _DC_TWO_NAME_/connect_inter/
+        authMethodPath: _DC_TWO_NAME_
+  tls:
+    enabled: true
+    enableAutoEncrypt: true
+    caCert:
+      secretName: "pki/cert/ca"
+    httpsOnly: false
+
+  federation:
+    enabled: true
+    primaryDatacenter: _DC_ONE_NAME_
+    k8sAuthMethodHost: https://_TWO_CLUSTER_IP_:8443
+    primaryGateways:
+    - _ONE_CLUSTER_IP_:31999
+
+  acls:
+    manageSystemACLs: true
+    bootstrapToken:
+      secretName: consul/data/secret/bootstrap-token
+      secretKey: token
+    replicationToken:
+      secretName: consul/data/secret/replication
+      secretKey: token
+
+  gossipEncryption:
+    secretName: consul/data/secret/gossip
+    secretKey: key
+
+ui:
+  service:
+    type: NodePort
+
+server:
+  replicas: 1  
+  exposeService:
+    enabled: true
+    type: NodePort
+    nodePort:
+      http: 32256
+      https: 31631
+      serf: 32124
+      rpc: 31864
+      grpc: 32245
+  serverCert:
+    secretName: "pki/issue/consul-cert-_DC_TWO_NAME_"
+  bootstrapExpect: 1
+  storage: 10Gi
+  connect: true
+
+connectInject:
+  replicas: 1
+  enabled: true
+  cni:
+    enabled: true
+    logLevel: info
+    cniBinDir: "/opt/cni/bin"
+    cniNetDir: "/etc/cni/net.d"
+
+controller:
+  enabled: true
+
+
+meshGateway:
+  enabled: true
+  service:
+    type: NodePort
+    nodePort: 31999

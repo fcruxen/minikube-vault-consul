@@ -1,0 +1,1 @@
+# minikube-vault-consul
